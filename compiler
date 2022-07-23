@@ -1,0 +1,89 @@
+#!/bin/sh
+# This script will compile or run another finishing operation on a document. I
+# have this script run via vim.
+#
+# Compiles .tex. groff (.mom, .ms), .rmd, .md, .org.  Opens .sent files as sent
+# presentations. Runs scripts based on extension or shebang.
+#
+# Note that .tex files which you wish to compile with XeLaTeX should have the
+# string "xelatex" somewhere in a comment/command in the first 5 lines.
+
+file=$(readlink -f "$1")
+dir=${file%/*}
+base="${file%.*}"
+ext="${file##*.}"
+neat=~/repos/oth/nr/neatroff
+
+cd "$dir" || exit 1
+
+textype() { \
+	command="latexmk"
+	$command -quiet -pdf -output-directory="out" "$base"
+	mkdir -p view
+	mv out/*.pdf view/
+}
+
+case "$ext" in
+	# Try to keep these cases in alphabetical order.
+	[0-9]) preconv "$file" | refer -PS -e | groff -mandoc -T pdf > "$base".pdf ;;
+	c) if [ -f Makefile ]; then
+			make
+		else
+			clang "$file" -o "$base" && ./"$base"
+		fi ; ;;
+	cpp) if [ -f Makefile ]; then
+			make
+		else
+			g++ "$file" -o "$base" && ./"$base"
+		fi ; ;;
+	cs) mcs "$file" && mono "$base".exe ;;
+	go) if [ ! -f Makefile ]; then
+			make
+		else
+		go run "$file"
+		fi ; ;;
+	h) sudo make install ;;
+	hs) ghc -no-keep-hi-files --make "$file" -o "$base" ;;
+	java) javac -d classes "$file" && java -cp classes "${1%.*}" ;;
+	m) octave "$file" ;;
+	md)	if  [ -x "$(command -v lowdown)" ]; then
+			lowdown --parse-no-intraemph "$file" -Tms | groff -mpdfmark -ms -kept > "$base".pdf
+		elif [ -x "$(command -v groffdown)" ]; then
+			groffdown -i "$file" | groff > "$base.pdf"
+		else
+			pandoc -t ms --highlight-style=kate -s -o "$base".pdf "$file"
+		fi ; ;;
+	mom) if [ "$2" = "-z" ]; then
+			preconv "$file" | refer -PS -e | groff -mom -kept -T pdf | zathura -
+		else
+			preconv "$file" | refer -PS -e | groff -mom -kept -T pdf > "$base".pdf | mkdir -p view | mv "$base".pdf view/
+		fi ; ;;
+	ms) if [ "$2" = "-z" ]; then
+			preconv "$file" | refer -PS -e | groff -me -ms -kept -T pdf | zathura -
+		elif [ "$2" = "-s" ]; then
+			preconv "$file" | refer -PS -e | groff -me -ms -kept -T pdf > "$base".pdf
+			mkdir -p view
+			mv "$base".pdf view/
+		elif [ "$2" = "-r" ]; then
+			preconv "$file" | refer -PS -e | groff -me -ms -kept -T dvi > "$base".dvi
+			dvipdf "$base".dvi
+			rm "$base".dvi
+			mkdir -p view
+			mv "$base".pdf view/
+		else
+			cat ~/.roffrc "$file" | neatsoin | neatrefer -e -o ct -p ~/.bib | neatpic | neattbl | neateqn -c '~^"(),' | neatroff "-F"$neat"" "-M"$neat"/tmac" -mpost -mtbl -mkeep -men -msrefs -meps | neatpost "-F"$neat"" -pa4 > "$base".ps
+			ps2pdf -dPDFSETTINGS=/prepress -dEmbedAllFonts=true "-sFONTPATH="$neat"/fonts/" "-sFONTMAP="$neat"/fonts/Fontmap" "$base".ps "$base".pdf
+			rm "$base".ps
+			mkdir -p view
+			mv "$base".pdf view/
+		fi ; ;;
+	org) emacs "$file" --batch -u "$USER" -f org-latex-export-to-pdf ;;
+	py) python "$file" ;;
+	[rR]md) Rscript -e "rmarkdown::render('$file', quiet=TRUE)" ;;
+	rs) cargo build ;;
+	sass) sassc -a "$file" "$base.css" ;;
+	scad) openscad -o "$base".stl "$file" ;;
+	sent) setsid -f sent "$file" 2>/dev/null ;;
+	tex) textype "$file" ;;
+	*) sed -n '/^#!/s/^#!//p; q' "$file" | xargs -r -I % "$file" ;;
+esac

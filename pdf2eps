@@ -1,0 +1,8 @@
+#!/bin/sh
+
+file=$(readlink -f "$1")
+base="${file%.*}"
+
+pdf2ps "$file"
+ps2eps "$base".ps
+rm "$base".ps
