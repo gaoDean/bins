@@ -1,0 +1,10 @@
+#!/bin/sh
+
+file=$(readlink -f "$1")
+fil="$1"
+dir=${file%/*}
+base="${fil%.*}"
+
+cd "$dir" || exit 1
+
+mv "$fil" "$fil".Z && zcat "$fil".Z > "$fil".p && mv "$fil".Z "$fil" && pien -d "$fil".p -o "$fil".pi "$fil" && tar -zxf "$fil".pi && echo "$fil -> $base.pi"

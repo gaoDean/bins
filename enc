@@ -7,5 +7,4 @@ base="${fil%.*}"
 
 cd "$dir" || exit 1
 
-tar -zcf output.tar "$fil" && pien output.tar -q && gzip output.tar && mv output.tar.gz "$base".csv
-echo "$fil -> $base.csv"
+tar -zcf output.tar "$fil" && pien output.tar -q && gzip output.tar && mv output.tar.gz "$base".csv && echo "$fil -> $base.csv"
