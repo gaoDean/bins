@@ -1,0 +1,20 @@
+#!/bin/sh
+
+base="${1%.*}"
+
+if [ $# -eq 0 ]; then
+    echo "No files provided"
+    exit 1
+fi
+
+gsed "s/^\s*[^#].*/<p>&<\/p>/g" "$1" | #check for anything not starting with "#", surround with paragraph
+gsed "s/^\s*#\s.*/<h1>&<\/h1>/g" | #check for headers
+gsed "s/^\s*##\s.*/<h2>&<\/h2>/g" | #surround headers
+gsed "s/^\s*###\s.*/<h3>&<\/h3>/g" | #the "&" returns deleted items
+gsed "s/^\s*####\s.*/<h4>&<\/h4>/g" |
+gsed "s/^\s*#####\s.*/<h5>&<\/h5>/g" |
+gsed "s/#\+\s//g" > "$base.html.tmp" #remove "#" from first five statements because it just surrounds
+cat prefix.html "$base.html.tmp" suffix.html > "$base.html"
+rm "$base.html.tmp"
+
+echo "prefix.html + $1 + suffix.html > $base.html"

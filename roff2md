@@ -1,0 +1,15 @@
+#!/bin/sh
+
+base="${1%.*}"
+
+if [ $# -eq 0 ]; then
+    echo "No files provided"
+    exit 1
+fi
+
+gsed "s/\.sh\s\"\?/## /g" "$1" |
+gsed "s/\.lh\s\"\?/### /g" |
+gsed "s/\.mh\s\"\?/#### /g" |
+gsed "s/\.\S\S\s*.*//g" > "$base.md"
+
+echo "$1 > $base.md"
