@@ -1,0 +1,5 @@
+#!/bin/sh
+
+alacritty_conf=$HOME/.config/alacritty/alacritty.yml
+
+gsed -i "s/  size: [0-9.]\+/  size: $1/g" $alacritty_conf
