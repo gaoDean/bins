@@ -1,0 +1,15 @@
+#!/bin/sh
+
+commands_file="${XDG_CONFIG_HOME:-$HOME/.config}/nvim/files/autos"
+
+auto="${XDG_CONFIG_HOME:-$HOME/.config}/nvim/lua/auto.lua"
+
+# Remove, prepare files
+rm -f "$auto" 2>/dev/null
+printf "vim.cmd(\n[[\n" > "$auto"
+
+eval "echo \"$(cat "$commands_file")\"" | \
+awk "!/^\s*#/ && !/^\s*\$/ {gsub(\"\\\s*#.*$\",\"\");
+	printf(\"au BufRead,BufNewFile %s\n\",\$0) >> \"$auto\" }"
+
+printf "]]\n) -- made with vimauto" >> "$auto"
