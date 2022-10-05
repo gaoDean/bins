@@ -58,25 +58,11 @@ case "$ext" in
 		else
 			preconv "$file" | refer -PS -e | groff -mom -kept -T pdf > "$base".pdf | mkdir -p view | mv "$base".pdf view/
 		fi ; ;;
-	ms) if [ "$2" = "-z" ]; then
-			preconv "$file" | refer -PS -e | groff -me -ms -kept -T pdf | zathura -
-		elif [ "$2" = "-s" ]; then
-			preconv "$file" | refer -PS -e | groff -me -ms -kept -T pdf > "$base".pdf
-			mkdir -p view
-			mv "$base".pdf view/
-		elif [ "$2" = "-r" ]; then
-			preconv "$file" | refer -PS -e | groff -me -ms -kept -T dvi > "$base".dvi
-			dvipdf "$base".dvi
-			rm "$base".dvi
-			mkdir -p view
-			mv "$base".pdf view/
-		else
-			cat ~/.config/roff/roffrc "$file" | neatsoin | neatrefer -e -o ct -p ~/.config/roff/bib | neatpic | neattbl | neateqn -c '~^"(),' | neatroff "-F"$neat"" "-M"$neat"/tmac" -mpost -mtbl -mkeep -men -msrefs -meps | neatpost "-F"$neat"" -pa4 > "$base".ps
-			ps2pdf -dPDFSETTINGS=/prepress -dEmbedAllFonts=true "-sFONTPATH="$neat"/fonts/" "-sFONTMAP="$neat"/fonts/Fontmap" "$base".ps "$base".pdf
-			rm "$base".ps
-			mkdir -p view
-			mv "$base".pdf view/
-		fi ; ;;
+	ms) cat ~/.config/roff/roffrc "$file" | neatsoin | neatrefer -e -o ct -p ~/.config/roff/bib | neatpic | neattbl | neateqn -c '~^"(),' | neatroff "-F"$neat"" "-M"$neat"/tmac" -mpost -mtbl -mkeep -men -msrefs -meps | neatpost "-F"$neat"" -pa4 > "$base".ps
+		ps2pdf -dPDFSETTINGS=/prepress -dEmbedAllFonts=true "-sFONTPATH="$neat"/fonts/" "-sFONTMAP="$neat"/fonts/Fontmap" "$base".ps "$base".pdf
+		rm "$base".ps
+		mkdir -p view
+		mv "$base".pdf view/ ;;
 	org) emacs "$file" --batch -u "$USER" -f org-latex-export-to-pdf ;;
 	py) python "$file" ;;
 	[rR]md) Rscript -e "rmarkdown::render('$file', quiet=TRUE)" ;;

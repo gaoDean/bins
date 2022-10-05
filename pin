@@ -1,0 +1,12 @@
+#!/bin/zsh
+
+pinyin="/Users/deangao/Documents/chars"
+rnd=$(( 1 + $RANDOM % $(wc -l < $pinyin) ))
+p1=$(sed -n "${rnd}p" $pinyin)
+rnd=$(( 1 + $RANDOM % $(wc -l < $pinyin) ))
+p2=$(sed -n "${rnd}p" $pinyin)
+echo -n $p1 | sed -e "s/\s.*/, /"
+echo $p2 | sed -e "s/\s.*//"
+echo -n $p1 | sed -e "s/^.*\s//"
+echo -n $p1 | sed -e "s/\s.*//" | wc -m | sed -e "s/^.*\([0-9]\+\).*/\1/" | tr -d '\n'
+echo $p2 | sed -e "s/^.*\s//"

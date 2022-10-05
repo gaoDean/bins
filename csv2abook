@@ -1,0 +1,12 @@
+#!/bin/sh
+
+out=$(abook --convert --informat csv --outformat abook <&0 |
+	sed -e '1,6d'
+)
+
+if [ -z "$2" ]
+then
+	echo "$out"
+else
+	echo "$out" >> ~/.config/abook/addressbook
+fi

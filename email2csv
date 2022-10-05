@@ -1,0 +1,6 @@
+#!/bin/sh
+
+out=$(sed "s/,\s/\n/g" <&0 |
+	sed "s/\s</,/g" |
+	sed "s/>//g")
+echo "$out"

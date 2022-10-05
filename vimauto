@@ -1,6 +1,6 @@
 #!/bin/sh
 
-commands_file="${XDG_CONFIG_HOME:-$HOME/.config}/nvim/files/autos"
+commands_file="${XDG_CONFIG_HOME:-$HOME/.config}/nvim/files/vimautos"
 
 auto="${XDG_CONFIG_HOME:-$HOME/.config}/nvim/lua/auto.lua"
 

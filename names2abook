@@ -1,0 +1,13 @@
+#!/bin/sh
+
+out=$(sed -E "s/(\S+)\s(\S+)/\1 \2,\1\2@caulfieldgs.vic.edu.au/g" <&0 |
+	abook --convert --informat csv --outformat abook |
+	sed -e '1,6d'
+)
+
+if [ -z "$1" ]
+then
+	echo "$out"
+else
+	echo "$out" >> ~/.config/abook/addressbook
+fi

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+curl https://sport.caulfieldlife.com.au/wp-content/uploads/sites/65/2022/09/CGS-Fixture-10-Sep-3.pdf -o /Users/deangao/Downloads/sport.pdf
