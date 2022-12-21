@@ -1,0 +1,7 @@
+#!/bin/sh
+
+oldbranch=$(git branch --show-current)
+
+git checkout main
+git branch -D "${oldbranch}"
+git pull
