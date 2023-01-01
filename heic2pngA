@@ -1,0 +1,3 @@
+#!/bin/sh
+
+find . -iname '*.HEIC' -maxdepth 1 -exec heic2png "{}" "{}.png" \;

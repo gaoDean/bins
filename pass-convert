@@ -1,0 +1,7 @@
+#!/bin/sh
+
+file=$(awk '{for (i=2; i<=NF; i++) print $i}' "$1")
+domain=$(echo "$file" |
+	xargs -L1 -I % 'cut -d, -f 1')
+pass=$(echo "$file" |
+	xargs -L1 -I % 'cut -d, -f 1')
