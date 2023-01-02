@@ -1,0 +1,5 @@
+#!/bin/sh
+# pbclear [seconds]
+
+sleep "$1"
+pbcopy < /dev/null
