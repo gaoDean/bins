@@ -16,13 +16,6 @@ neat=~/repos/oth/nr/neatroff
 
 cd "$dir" || exit 1
 
-textype() { \
-	command="latexmk"
-	$command -quiet -pdf -output-directory="out" "$base"
-	mkdir -p view
-	mv out/*.pdf view/
-}
-
 case "$ext" in
 	# Try to keep these cases in alphabetical order.
 	[0-9]) preconv "$file" | refer -PS -e | groff -mandoc -T pdf > "$base".pdf ;;
@@ -51,7 +44,7 @@ case "$ext" in
 		elif [ -x "$(command -v groffdown)" ]; then
 			groffdown -i "$file" | groff > "$base.pdf"
 		else
-			pandoc -t ms --highlight-style=kate -s -o "$base".pdf "$file"
+			pandoc -s -o "$base".pdf "$file"
 		fi ; ;;
 	mom) if [ "$2" = "-z" ]; then
 			preconv "$file" | refer -PS -e | groff -mom -kept -T pdf | zathura -
@@ -69,7 +62,7 @@ case "$ext" in
 	rs) cargo build ;;
 	sass) sassc -a "$file" "$base.css" ;;
 	scad) openscad -o "$base".stl "$file" ;;
-	sent) setsid -f sent "$file" 2>/dev/null ;;
-	tex) textype "$file" ;;
+	sent) sent "$file" 2>/dev/null ;;
+	tex) pandoc -s -o "$base".pdf "$file" ;;
 	*) sed -n '/^#!/s/^#!//p; q' "$file" | xargs -r -I % "$file" ;;
 esac

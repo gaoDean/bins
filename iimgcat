@@ -1,0 +1,12 @@
+#!/bin/sh
+
+alacritty_conf=$HOME/.config/alacritty/alacritty.yml
+
+original_font=$(grep "^\s*size: [0-9]*" $alacritty_conf | grep -o "[0-9]*")
+
+termfont 8
+sleep 1.1
+imgcat "$@"
+read -p "Press enter to stop..."
+termfont "$original_font"
+clear

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+nohup sleep $((60 * 5)) && ~/.local/bin/notify "pomo" "Focus" ~/.local/bin/pomodo &

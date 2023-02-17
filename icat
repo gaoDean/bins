@@ -1,0 +1,3 @@
+#!/bin/sh
+
+open -a ~/Applications/imageviewer5.app $(realpath "$1")
