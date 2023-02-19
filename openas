@@ -3,11 +3,10 @@
 file=$(readlink -f "$1")
 base="${file%.*}"
 
-mode=""
-if [ -n "$3" ]; then
-	mode="--mode=presentation"
+conv "$file" pdf "$2"
+
+if [ -z "$3" ]; then
+	nuke "$base".pdf
+else
+	nohup zathura "--mode=presentation" "${base}".pdf >/dev/null 2>&1 &
 fi
-
-
-conv "$file" pdf "$mode"
-nohup zathura "${base}.pdf" "$mode" >/dev/null 2>&1 &

@@ -1,11 +1,16 @@
 #!/bin/sh
 
+if [ -z "$2" ]; then
+	echo "Not enough arguments"
+	exit 0
+fi
+
 file=$(readlink -f "$1")
 base="${file%.*}"
 
 type=""
-if [ -n "$3"]; then
+if [ -n "$3" ]; then
 	type="-t ${3}"
 fi
 
-pandoc -s "$type" -o "${base}.${2}" "$file"
+pandoc $type -s -o "${base}.${2}" "$file"
