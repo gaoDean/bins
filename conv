@@ -1,0 +1,11 @@
+#!/bin/sh
+
+file=$(readlink -f "$1")
+base="${file%.*}"
+
+type=""
+if [ -n "$3"]; then
+	type="-t ${3}"
+fi
+
+pandoc -s "$type" -o "${base}.${2}" "$file"

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+file=$(readlink -f "$1")
+base="${file%.*}"
+
+mode=""
+if [ -n "$3" ]; then
+	mode="--mode=presentation"
+fi
+
+
+conv "$file" pdf "$mode"
+nohup zathura "${base}.pdf" "$mode" >/dev/null 2>&1 &

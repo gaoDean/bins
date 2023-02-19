@@ -1,3 +1,0 @@
-#!/bin/sh
-
-nohup sleep $((60 * 20)) && ~/.local/bin/notify "pomo" "break" ~/.local/bin/pomobreak &
