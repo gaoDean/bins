@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ "$1" == "reset" ]; then
+	alacritty msg config -w "$ALACRITTY_WINDOW_ID" --reset
+else
+	alacritty msg config -w "$ALACRITTY_WINDOW_ID" font.normal.family="$1"
+fi
