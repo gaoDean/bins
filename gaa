@@ -1,0 +1,5 @@
+#!/bin/sh
+
+git -C ~/"$1" add -A
+git -C ~/"$1" commit -m "update: $(gdate)"
+git -C ~/"$1" push -q
