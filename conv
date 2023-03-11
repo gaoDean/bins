@@ -7,10 +7,16 @@ fi
 
 file=$(readlink -f "$1")
 base="${file%.*}"
+ext="${file##*.}"
 
 type=""
 if [ -n "$3" ]; then
 	type="-t ${3}"
 fi
 
-pandoc $type -s -o "${base}.${2}" "$file"
+from=""
+# if [ -z "$type" ] && [ "$ext" == "md" ]; then
+# 	from="-f gfm"
+# fi
+
+pandoc $type -s $from -o "${base}.${2}" "$file"
