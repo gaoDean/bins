@@ -1,7 +1,7 @@
 #!/bin/sh
 
-brew update
-brew upgrade
-brew autoremove
-brew cleanup
-touch ~/.brew
+/usr/local/bin/brew update
+/usr/local/bin/brew upgrade
+/usr/local/bin/brew autoremove
+/usr/local/bin/brew cleanup
+touch ~/.config/.brew
