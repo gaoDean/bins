@@ -14,9 +14,9 @@ if [ -n "$3" ]; then
 	type="-t ${3}"
 fi
 
-from=""
+# from=""
 # if [ -z "$type" ] && [ "$ext" == "md" ]; then
 # 	from="-f gfm"
 # fi
 
-pandoc $type -s $from -o "${base}.${2}" "$file"
+pandoc $type -s --citeproc -o "${base}.${2}" "$file"
